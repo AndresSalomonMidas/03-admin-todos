@@ -26,3 +26,34 @@ export async function GET(request: Request, { params }: Segments) {
 
   return NextResponse.json(todo);
 }
+
+export async function PUT(request: Request, { params }: Segments) {
+  const { id } = params;
+
+  const todo = await prisma.todo.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  // Solo para asegurarse que existe el todo
+  if (!todo) {
+    return NextResponse.json(
+      { message: 'Todo no encontrado o no existe' },
+      { status: 400 },
+    );
+  }
+
+  const body = await request.json();
+
+  const updatedTodo = await prisma.todo.update({
+    where: {
+      id,
+    },
+    data: {
+      ...body,
+    },
+  });
+
+  return NextResponse.json(updatedTodo);
+}
