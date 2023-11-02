@@ -10,7 +10,7 @@ export async function GET() {
     data: [
       { description: 'Piedra del alma', complete: true },
       { description: 'Piedra del poder' },
-      { description: 'Piedra del tiempo' },
+      { description: 'Piedra del tiempo', complete: true },
       { description: 'Piedra del espacio' },
       { description: 'Piedra de la realidad' },
     ],
