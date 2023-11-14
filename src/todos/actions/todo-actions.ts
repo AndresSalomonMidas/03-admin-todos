@@ -4,7 +4,21 @@ import prisma from '@/lib/prisma';
 import type { Todo } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
+/**
+ * Sleeps for the specified number of seconds.
+ *
+ * @param {number} seconds - The number of seconds to sleep.
+ * @return {Promise<boolean>} A promise that resolves to true after the specified number of seconds.
+ */
+export const sleep = (seconds: number) => new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(true);
+  }, seconds * 1000);
+});
+
 export const toggleTodo = async (id: string, complete: boolean): Promise<Todo> => {
+  await sleep(3);
+
   const todo = await prisma.todo.findFirst({ where: { id } });
 
   if (!todo) {

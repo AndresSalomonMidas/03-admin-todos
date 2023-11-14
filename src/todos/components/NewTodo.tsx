@@ -9,7 +9,6 @@ import { addTodo, deleteCompletedTodos } from '../actions/todo-actions';
 // CON SERVER ACTIONS
 export const NewTodo = () => {
   const [description, setDescription] = useState('');
-  // const router = useRouter();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
