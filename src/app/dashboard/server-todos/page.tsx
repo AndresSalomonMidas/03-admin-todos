@@ -1,6 +1,11 @@
 import prisma from '@/lib/prisma';
 import { NewTodo, TodosGrid } from '@/todos';
 
+// Estos routes segments funcionan mejor con las server actions
+// Caso contrario, se pueden utilizar con el fetch
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Listado de todos',
   description: 'Listado de todos',
