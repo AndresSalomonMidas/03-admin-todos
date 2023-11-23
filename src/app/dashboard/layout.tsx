@@ -16,7 +16,7 @@ export default function DashboardLayout({
 
         <TopMenu />
 
-        <div className="px-6 pt-6">
+        <div className="px-6 pt-6 rounded">
 
           {children}
 
