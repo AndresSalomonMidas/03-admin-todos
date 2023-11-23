@@ -6,6 +6,7 @@ import {
   IoCheckboxOutline,
   IoCodeWorkingOutline,
   IoListOutline,
+  IoPlayForwardOutline,
 } from 'react-icons/io5';
 import { SidebarItem } from '../SidebarItem/SidebarItem';
 
@@ -29,6 +30,11 @@ const menuItems = [
     icon: <IoCodeWorkingOutline />,
     title: 'Cookies',
     path: '/dashboard/cookies',
+  },
+  {
+    icon: <IoPlayForwardOutline />,
+    title: 'Productos',
+    path: '/dashboard/products',
   },
 ];
 
