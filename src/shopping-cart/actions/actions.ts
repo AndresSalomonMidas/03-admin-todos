@@ -36,10 +36,8 @@ export const removeProductFromCart = (productId: string) => {
   const cookieCart = getCookieCart();
 
   if (cookieCart[productId]) {
-    if (cookieCart[productId] > 1) {
-      cookieCart[productId] -= 1;
-    } else {
-      delete cookieCart[productId];
-    }
+    delete cookieCart[productId];
   }
+
+  setCookie('cart', JSON.stringify(cookieCart));
 };
