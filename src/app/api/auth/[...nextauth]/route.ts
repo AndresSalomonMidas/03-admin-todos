@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
@@ -17,6 +18,40 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
+  callbacks: {
+    async signIn() {
+      return true;
+    },
+
+    async jwt({ token }) {
+      const dbUser = await prisma.user.findUnique({
+        where: {
+          email: token.email ?? 'no-email',
+        },
+      });
+
+      if (dbUser?.isActive === false) {
+        throw Error('User is not active');
+      }
+
+      token.roles = dbUser?.roles ?? ['no-roles'];
+      token.id = dbUser?.id ?? 'no-uuid';
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.roles = token.roles;
+        session.user.id = token.id;
+      }
+
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
