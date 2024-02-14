@@ -16,6 +16,9 @@ model Todo {
   complete    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  // Custom
+  user        User     @relation(fields: [userId], references: [id]) // Relation with Todos
+  userId      String // Creation of the column
 }
 
 // Auth.js
@@ -58,6 +61,7 @@ model User {
   roles         String[]  @default(["user"])
   isActive      Boolean   @default(true)
   password      String?
+  todos         Todo[] // 1 user can have many todos
 }
 
 model VerificationToken {
