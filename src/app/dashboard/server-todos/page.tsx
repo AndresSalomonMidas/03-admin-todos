@@ -1,5 +1,8 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
 import { NewTodo, TodosGrid } from '@/todos';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 // Estos routes segments funcionan mejor con las server actions
 // Caso contrario, se pueden utilizar con el fetch
@@ -18,7 +21,14 @@ export const metadata = {
 */
 
 export default async function ServerTodosPage() {
-  const todos = await prisma.todo.findMany({ orderBy: { description: 'asc' } });
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) redirect('/api/auth/signin');
+
+  const todos = await prisma.todo.findMany({
+    where: { userId: session?.user?.id },
+    orderBy: { description: 'asc' },
+  });
 
   return (
     <>
