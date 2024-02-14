@@ -57,6 +57,7 @@ model User {
   // Custom
   roles         String[]  @default(["user"])
   isActive      Boolean   @default(true)
+  password      String?
 }
 
 model VerificationToken {
