@@ -1,20 +1,28 @@
+/* eslint-disable max-len */
+
 'use client';
 
 import { FormEvent, useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
 // import * as todosApi from '@/todos/helpers/todos';
 // import { useRouter } from 'next/navigation';
-import { addTodo, deleteCompletedTodos } from '../actions/todo-actions';
+import { useRouter } from 'next/navigation';
+import { deleteCompletedTodos } from '../actions/todo-actions';
+import { createTodo } from '../helpers/todos';
 
 // CON SERVER ACTIONS
 export const NewTodo = () => {
   const [description, setDescription] = useState('');
+  const router = useRouter();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (description.trim().length === 0) return;
 
-    await addTodo(description);
+    // await addTodo(description);
+
+    await createTodo(description); // RESTful API
+    router.refresh();
     setDescription('');
   };
 

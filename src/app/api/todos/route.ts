@@ -1,6 +1,8 @@
 import prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import * as yup from 'yup';
+import { authOptions } from '../auth/[...nextauth]/route';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -37,11 +39,15 @@ const postSchema = yup.object({
 });
 
 export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) return NextResponse.json('No auth', { status: 401 });
+
   try {
     const { complete, description } = await postSchema.validate(await request.json());
 
     const todo = await prisma.todo.create({
-      data: { complete, description },
+      data: { complete, description, userId: session?.user.id },
     });
 
     return NextResponse.json(todo);
@@ -51,8 +57,12 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) return NextResponse.json('No auth', { status: 401 });
+
   try {
-    await prisma.todo.deleteMany({ where: { complete: true } });
+    await prisma.todo.deleteMany({ where: { complete: true, userId: session?.user.id } });
 
     return NextResponse.json('Todos deleted');
   } catch (error) {

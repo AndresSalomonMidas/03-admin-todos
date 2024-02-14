@@ -1,7 +1,9 @@
 import prisma from '@/lib/prisma';
 import { Todo } from '@prisma/client';
+import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import * as yup from 'yup';
+import { authOptions } from '../../auth/[...nextauth]/route';
 
 interface Segments {
   params: {
@@ -10,9 +12,18 @@ interface Segments {
 }
 
 const getTodo = async (id: string): Promise<Todo | null> => {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) return null;
+
   const todo = await prisma.todo.findUnique({
     where: { id },
   });
+
+  // Don't allow updating another user's todo
+  if (todo?.userId !== session?.user.id) {
+    return null;
+  }
 
   return todo;
 };
